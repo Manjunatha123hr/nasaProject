@@ -12,7 +12,8 @@ async function httpGetLaunches() {
     });
 }
 
-async function httpSubmitLaunch(launch) {
+async function httpSubmitLaunch(launch)
+ {
   try
   {
     return await fetch(`${API_URL}/launches`,
