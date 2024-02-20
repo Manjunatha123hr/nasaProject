@@ -1,5 +1,7 @@
 const launches = new Map();
 
+let latestFlightNumber = 100;
+
 const launch = {
     flightNumber: 100,
     mission: 'Kepler Exoplanet X',
@@ -17,4 +19,18 @@ function getAllLaunches (){
     return Array.from(launches.values());
 }
 
-module.exports = {getAllLaunches,};
+function addNewLaunch(launch)
+{
+    latestFlightNumber++;                       //Here we are adding to keep track of current 
+                                                //Flight we are adding latst flight number to the launch map using Object.() 
+
+    launches.set(latestFlightNumber,         //Latest flight number is added inside the launch
+        Object.assign(launch,
+        {upcoming:true,                    //Object.assign(which object/map, object/map parametres to set);
+         success:true,
+         customers:['HRM','ISRO'],
+         flightNumber:latestFlightNumber,
+        }))
+}
+
+module.exports = {addNewLaunch,getAllLaunches,};
