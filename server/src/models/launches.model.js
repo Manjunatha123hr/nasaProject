@@ -11,6 +11,10 @@ const launch = {
     success : true,
 };
 
-launches.set(launch.flightNumber,launch);
+launches.set(launch.flightNumber,launch);   //Keep track of launch based on  the flightNumber as the key
 
-module.exports = {launches,};
+function getAllLaunches (){
+    return Array.from(launches.values());
+}
+
+module.exports = {getAllLaunches,};
