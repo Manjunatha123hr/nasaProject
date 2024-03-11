@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { resolve } = require('path');
 const habitablePlanets = [];
-
+const planets = require('./planets.mongo');
 function isHabitable(planet)
 {
     // conditions for a planet to be habitable are   ****, Amoutnt of light relative to earth >0.36 times earth and <1.1 times of earth
@@ -18,26 +18,50 @@ function loadPlanetsData(){
         fs.createReadStream(path.join(__dirname,'..','..','data','kepler_data.csv')).pipe(parse({
             comment : '#',
             columns : true,
-        })).on('data',(data)=>{
+        })).on('data',async (data)=>{
             if(isHabitable(data))
             {
-                habitablePlanets.push(data);
+                //habitablePlanets.push(data);
+              savePlanets(data)
             }
            
         }).on('error',(err)=>{
             console.log(err);
             reject(err);
-        }).on('end',()=>{
-            console.log(`${habitablePlanets.length} no of planets like earth are found`);
+        }).on('end',async()=>{
+            const countPlanets= (await getAllPlanets()).length;
+            console.log(`${countPlanets} no of planets like earth are found`);
+            console.log(await getAllPlanets());
             //console.log(habitablePlanets);
             resolve();
         });
     });
 }
 
-function getAllPlanets()
+async function getAllPlanets()
 {
-    return habitablePlanets;
+    
+    return await planets.find({});
+}
+
+async function savePlanets(planet)
+{  try{
+    await planets.updateOne(
+        {
+            keplerName:planet.kepler_name,
+        },
+        {
+            keplerName:planet.kepler_name,
+        },
+        {
+            upsert:true,
+        }
+    );
+}
+catch(err){
+    console.log(`Could not update planet ${err}`)
+}
+   
 }
 
 module.exports = {loadPlanetsData , getAllPlanets,};
